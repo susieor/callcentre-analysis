@@ -2,40 +2,54 @@
 
 use callcenter;
 
-SELECT *
-FROM callcenter.info3;
+SELECT 
+    *
+FROM
+    callcenter.info3;
 
 -- Checking if there are any customers who called more than once (none found).
-select distinct id
-from callcenter.info3;
+SELECT DISTINCT
+    id
+FROM
+    callcenter.info3;
 
 -- Analysing sentiment distribution (Most calls exhibit negative sentiment).
 
-select sentiment, count(id) as totals
-from callcenter.info3
-group by sentiment
-order by totals desc;
+SELECT 
+    sentiment, COUNT(id) AS totals
+FROM
+    callcenter.info3
+GROUP BY sentiment
+ORDER BY totals DESC;
 
 -- Calculating average CSAT score.
 
-select avg(csat_score) as avg_csat_score
-from callcenter.info3;
+SELECT 
+    AVG(csat_score) AS avg_csat_score
+FROM
+    callcenter.info3;
 
 -- Determining main reasons for calls.
-select reason, count(id) as totals
-from callcenter.info3
-group by reason
-order by totals desc;
+SELECT 
+    reason, COUNT(id) AS totals
+FROM
+    callcenter.info3
+GROUP BY reason
+ORDER BY totals DESC;
 
-select * 
-from callcenter.info3;
+SELECT 
+    *
+FROM
+    callcenter.info3;
 
 -- Identifying top 3 days with the highest call volume.
-select distinct day(call_timestamp) as Day, count(id) as no_of_calls
-from callcenter.info3
-group by Day
-order by no_of_calls desc
-limit 3;
+SELECT DISTINCT
+    DAY(call_timestamp) AS Day, COUNT(id) AS no_of_calls
+FROM
+    callcenter.info3
+GROUP BY Day
+ORDER BY no_of_calls DESC
+LIMIT 3;
 
 -- Checking for a lower count of calls below SLA (yes, there is).
 WITH info_cte2 AS (
@@ -60,17 +74,20 @@ FROM info_cte
 where response_time IN ('Above SLA', 'Within SLA') AND csat_score > 5;
 
 -- Analysing distribution of CSAT scores.
-SELECT csat_score, COUNT(id) as count
-FROM callcenter.info3
+SELECT 
+    csat_score, COUNT(id) AS count
+FROM
+    callcenter.info3
 GROUP BY csat_score
 ORDER BY CAST(csat_score AS UNSIGNED) ASC;
 
 -- Assessing the impact of higher CSAT scores.
-with csat_cte as (
+WITH csat_cte as (
 SELECT csat_score, COUNT(id) as count
 FROM callcenter.info3
 GROUP BY csat_score
 ORDER BY CAST(csat_score AS UNSIGNED) ASC)
-select * from csat_cte
-where csat_score > 5
+SELECT * 
+FROM csat_cte
+WHERE csat_score > 5
 
